@@ -53,6 +53,12 @@
   h3.mh{font-size:15px;font-weight:750;letter-spacing:-.02em;margin:18px 0 4px;padding-top:14px;border-top:1px solid var(--line-2)}
   .mhsub{font-size:12.5px;color:var(--ink-2);margin:0 0 10px}
   .sub{font-size:13.5px;color:var(--ink-2);margin:0 0 14px;max-width:66ch}
+  summary.sec{cursor:pointer;list-style:none;display:flex;align-items:center;gap:8px;user-select:none}
+  summary.sec::-webkit-details-marker{display:none}
+  summary.sec::before{content:"›";font-size:19px;font-weight:700;color:var(--ink-2);line-height:1;transition:transform .15s}
+  details[open]>summary.sec::before{transform:rotate(90deg)}
+  summary.sec h2{margin:0}
+  details[open]>summary.sec{margin-bottom:10px}
   .sub b{color:var(--ink);font-weight:650}
   .hint{font-family:var(--mono);font-size:11px;color:var(--ink-3);margin:0 0 4px}
   .hint b{font-weight:400;color:var(--vi)}
@@ -258,33 +264,43 @@
   </div>
 
   <div class="card">
-    <h2>Inference — 적지 않아도 참인 것</h2>
+    <details>
+    <summary class="sec"><h2>Inference — 적지 않아도 참인 것</h2></summary>
     <p class="sub">기록된 연결(Relation)을 이어서 따라가면, 직접 적은 적 없는 사실도 알아낼 수 있어. 그렇게 알아내는 방법 네 가지야. <b>카드를 누르면</b> 어떤 연결을 따라가는지 맵에 그려져.</p>
     <div id="infs"></div>
+    </details>
   </div>
 
   <div class="card">
-    <h2>Action — 뭔가를 바꾸는 유일한 방법</h2>
+    <details>
+    <summary class="sec"><h2>Action — 뭔가를 바꾸는 유일한 방법</h2></summary>
     <p class="sub">이 모델에서 무언가를 바꾸는 방법은 여덟 가지뿐이야. 각각에는 실행 전에 확인하는 조건(Axiom)이 정해져 있고, 조건을 만족하지 못하면 실행 자체가 거부돼. <b>맵에서 보기</b>를 누르면 그 Action 이 무엇을 바꾸는지 맵에 표시돼.</p>
     <div id="acts"></div>
+    </details>
   </div>
 
   <div class="card">
-    <h2>Metric — "잘 되고 있나?"의 답</h2>
+    <details>
+    <summary class="sec"><h2>Metric — "잘 되고 있나?"의 답</h2></summary>
     <div class="fx" id="fns"></div>
+    </details>
   </div>
 
   <div class="card">
-    <h2>Axiom — 언제나 지켜져야 하는 조건</h2>
+    <details>
+    <summary class="sec"><h2>Axiom — 언제나 지켜져야 하는 조건</h2></summary>
     <p class="sub">항상 지켜져야 하는 조건들이야. 어기는 데이터는 경고가 아니라 아예 만들 수 없어. 카드를 누르면 그 조건이 어느 Class 에 적용되는지 맵에 표시돼.</p>
     <div id="axl"></div>
+    </details>
   </div>
 
 
   <div class="card">
-    <h2>다음으로 — 더 밀어볼 수 있는 세 방향</h2>
+    <details>
+    <summary class="sec"><h2>다음으로 — 더 밀어볼 수 있는 세 방향</h2></summary>
     <p class="sub">이 모델에 더할 수 있는 개선 방향이야. 아직 넣지 않았고, 넣을지 말지가 다음에 정할 일이야.</p>
     <div id="props"></div>
+    </details>
   </div>
 
   </div>
