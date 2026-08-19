@@ -1,0 +1,547 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>디자인 시스템 온톨로지 v5</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+
+<style>
+  :root{
+    --ground:#EBEFF5; --surface:#fff;
+    --ink:#0F1926; --ink-2:#57657A; --ink-3:#8B98AA;
+    --line:#D6DDE7; --line-2:#E7ECF3;
+    --vi:#4C3FD1; --vi-bg:#E7E4FB;
+    --te:#0A7A65; --te-bg:#DCF2EB;
+    --am:#A65B0B; --am-bg:#FAEBD8;
+    --mg:#A82A63; --mg-bg:#FBE4EE;
+    --bl:#185FA5; --bl-bg:#E6F1FB;
+    --gy:#5F5E5A; --gy-bg:#F1EFE8;
+    --cy:#0E7490; --cy-bg:#E0F2F7;
+    --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+    --sans:"Pretendard Variable",Pretendard,-apple-system,system-ui,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:none;margin:0;padding:44px 28px 76px}
+  .layout{display:grid;grid-template-columns:minmax(420px,44%) 1fr;gap:16px;align-items:start;margin-top:14px}
+  .left{position:sticky;top:10px;max-height:calc(100vh - 20px);overflow:auto;overscroll-behavior:contain;scrollbar-width:thin}
+  .left .card{margin-top:0}
+  .right{min-width:0}
+  .right .card:first-child{margin-top:0}
+  @media (max-width:1020px){.layout{grid-template-columns:1fr}.left{position:static;max-height:none;overflow:visible}}
+  .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin:0 0 14px;display:flex;align-items:center;gap:10px}
+  .eyebrow::after{content:"";flex:1;height:1px;background:var(--line)}
+  h1{font-size:clamp(24px,3.6vw,34px);line-height:1.2;letter-spacing:-.03em;font-weight:800;margin:0 0 10px}
+  h1 em{font-style:normal;color:var(--vi)}
+  .lede{font-size:14.5px;color:var(--ink-2);margin:0;max-width:64ch}
+
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px 20px 20px;margin-top:14px}
+  h2{font-size:17px;font-weight:750;letter-spacing:-.02em;margin:0 0 4px}
+  .modebar{display:flex;gap:4px;align-items:center;background:var(--ground);border-radius:10px;padding:4px;margin:0 0 14px}
+  .mblab{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);padding:0 8px}
+  .modebar button{flex:1;font-family:var(--sans);font-size:12px;font-weight:600;color:var(--ink-2);background:none;border:0;padding:7px 10px;border-radius:7px;cursor:pointer}
+  .modebar button[aria-pressed="true"]{background:var(--ink);color:#fff}
+  .exline{display:block;margin-top:7px;padding:7px 10px;background:var(--am-bg);border-radius:7px;font-size:12px;color:#7A4308}
+  .exline b{font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;color:var(--am);margin-right:6px}
+  .ri .exr2{display:block;font-family:var(--sans);font-size:11px;color:#7A4308;margin-top:2px;white-space:normal}
+  h3.mh{font-size:15px;font-weight:750;letter-spacing:-.02em;margin:18px 0 4px;padding-top:14px;border-top:1px solid var(--line-2)}
+  .mhsub{font-size:12.5px;color:var(--ink-2);margin:0 0 10px}
+  .sub{font-size:13.5px;color:var(--ink-2);margin:0 0 14px;max-width:66ch}
+  .sub b{color:var(--ink);font-weight:650}
+  .hint{font-family:var(--mono);font-size:11px;color:var(--ink-3);margin:0 0 4px}
+  .hint b{font-weight:400;color:var(--vi)}
+  svg{display:block;width:100%;height:auto}
+  .cls{cursor:pointer}
+  .cls text{pointer-events:none}
+  .cn{font-family:var(--mono);font-size:10.5px;font-weight:600}
+  .cl{font-family:var(--sans);font-size:10px}
+  .cx{font-family:var(--mono);font-size:9px;font-weight:500}
+  .exnote{font-family:var(--mono);font-size:10px;color:var(--am);background:var(--am-bg);padding:3px 9px;border-radius:5px;display:inline-block;margin:0 0 8px}
+  .exblock{margin:12px 0 0;padding:10px 13px;background:var(--am-bg);border-radius:9px}
+  .exblock .k{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--am);display:block;margin:0 0 3px}
+  .exblock .n{font-family:var(--mono);font-size:12.5px;font-weight:600;color:#7A4308;display:block;margin:0 0 3px}
+  .exblock .b{font-size:12.5px;color:#7A4308;margin:0}
+  .narr .ex{display:block;margin-top:7px;padding-top:7px;border-top:1px solid rgba(76,63,209,.18);font-size:12.5px}
+  .narr .ex b{display:inline;font-size:10px;margin-right:5px;color:var(--am)}
+  .dimmed{opacity:.16}
+  .arc{fill:none;stroke:var(--vi);stroke-width:1.6}
+  .arc.all{stroke:var(--ink-3);stroke-width:1;opacity:.22}
+  .allbtn{font-family:var(--sans);font-size:11px;font-weight:600;background:none;border:1px solid var(--line);color:var(--ink-2);padding:4px 11px;border-radius:999px;cursor:pointer;margin-left:8px;vertical-align:1px}
+  .allbtn:hover{border-color:var(--vi);color:var(--vi)}
+  .allbtn[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+  .arclab{font-family:var(--mono);font-size:10px;font-weight:500;fill:var(--vi)}
+  .lbg{fill:var(--surface);stroke:var(--vi-bg);stroke-width:1}
+  .band{fill:#F5F7FB}
+  .band.des{fill:#F1F6F3}
+  .band.obsv{fill:#FBF4EA}
+  .bandlab{font-family:var(--mono);font-size:10px;letter-spacing:.11em;fill:var(--ink-3)}
+  .divide{stroke:var(--ink-3);stroke-width:1;stroke-dasharray:5 5;opacity:.5}
+  .dividelab{font-family:var(--mono);font-size:10px;fill:var(--ink-3)}
+
+  .tourbar{display:flex;gap:8px;margin:0 0 10px;flex-wrap:wrap;align-items:center}
+  .tsel{display:inline-flex;background:var(--ground);border-radius:9px;padding:3px}
+  .tsel button{font-family:var(--sans);font-size:12px;font-weight:600;color:var(--ink-2);background:none;border:0;padding:6px 13px;border-radius:7px;cursor:pointer}
+  .tsel button[aria-pressed="true"]{background:var(--ink);color:#fff}
+  .steps{display:flex;gap:4px;flex-wrap:wrap}
+  .steps button{font-family:var(--sans);font-size:11px;font-weight:600;color:var(--ink-2);background:var(--ground);border:1px solid transparent;padding:5px 9px;border-radius:8px;cursor:pointer}
+  .steps button:hover{border-color:var(--ink-3)}
+  .steps button[aria-pressed="true"]{background:var(--vi);color:#fff}
+  .steps button.off{background:none;color:var(--vi);border:1px solid var(--line)}
+  .narr{margin:0 0 12px;padding:11px 14px;background:var(--vi-bg);border-radius:9px;font-size:13px;color:var(--ink)}
+  .narr b{font-family:var(--mono);font-size:11px;color:var(--vi);display:block;margin-bottom:3px;letter-spacing:.06em}
+
+  .det{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:16px 0 0;padding-top:16px;border-top:1px solid var(--line-2)}
+  .dk{font-family:var(--mono);font-size:10px;letter-spacing:.11em;text-transform:uppercase;color:var(--ink-3);margin:0 0 6px}
+  .dt{font-family:var(--mono);font-size:16px;font-weight:600;margin:0 0 2px}
+  .dl{font-size:13px;color:var(--ink-2);margin:0 0 12px}
+  .dd{font-size:13px;color:var(--ink-2);margin:0 0 12px}
+  .dd b{color:var(--ink);font-weight:650}
+  .rline{padding:7px 0;border-top:1px solid var(--line-2)}
+  .rline:first-of-type{border-top:0}
+  .rt{font-family:var(--mono);font-size:11.5px;font-weight:600;color:var(--vi);display:inline-block;margin-right:7px}
+  .rr{font-size:12.5px;color:var(--ink)}
+  .rm{display:block;font-family:var(--mono);font-size:10.5px;color:var(--ink-3);margin-top:2px}
+  .p{font-family:var(--mono);font-size:11px;background:var(--ground);padding:3px 8px;border-radius:5px;margin:0 4px 4px 0;display:inline-block;color:var(--ink-2)}
+  .ifc{font-family:var(--mono);font-size:10.5px;background:var(--cy-bg);color:var(--cy);padding:2px 8px;border-radius:5px;margin:0 4px 4px 0;display:inline-block}
+  .empty{font-size:13px;color:var(--ink-3);margin:0}
+
+  .iface{border:1px solid var(--line);border-radius:11px;padding:13px 15px;margin:0 0 9px;cursor:pointer;transition:border-color .15s}
+  .iface:hover{border-color:var(--ink-3)}
+  .iface[aria-pressed="true"]{border-color:var(--cy);background:var(--cy-bg)}
+  .ifh{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+  .ifn{font-family:var(--mono);font-size:12.5px;font-weight:600;color:var(--cy)}
+  .ifk{font-size:13.5px;font-weight:700;flex:1}
+  .ifr{font-size:12.5px;color:var(--ink-2);margin:5px 0 7px}
+  .ifg{font-family:var(--mono);font-size:10.5px;color:var(--ink-3)}
+  .ifg span{background:var(--ground);padding:2px 7px;border-radius:4px;margin-right:4px;display:inline-block;margin-bottom:3px}
+  .iface[aria-pressed="true"] .ifg span{background:var(--surface)}
+
+  .ridx{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:4px}
+  .ri{display:flex;align-items:baseline;gap:7px;padding:7px 10px;border-radius:8px;cursor:pointer;border:1px solid transparent;transition:all .12s}
+  .ri:hover{background:var(--ground)}
+  .ri[aria-pressed="true"]{background:var(--vi-bg);border-color:var(--vi)}
+  .ri .n{font-family:var(--mono);font-size:11px;font-weight:600;color:var(--vi);white-space:nowrap}
+  .ri .ft{font-family:var(--mono);font-size:10px;color:var(--ink-3);white-space:nowrap}
+  .ri .ft i{font-style:normal;color:var(--ink-2)}
+
+  .act{border:1px solid var(--line);border-radius:11px;padding:14px 16px;margin:0 0 9px}
+  .acth{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin:0 0 4px}
+  .acti{font-family:var(--mono);font-size:12px;font-weight:600;color:var(--mg)}
+  .actk{font-size:14px;font-weight:700}
+  .seemap{font-family:var(--sans);font-size:11px;font-weight:600;background:none;border:1px solid var(--line);color:var(--ink-2);padding:3px 10px;border-radius:999px;cursor:pointer;margin-left:auto}
+  .seemap:hover{border-color:var(--vi);color:var(--vi)}
+  .seemap[aria-pressed="true"]{background:var(--vi);border-color:var(--vi);color:#fff}
+  .actn{font-size:12.5px;color:var(--ink-2);margin:0 0 9px}
+  .actrow{display:flex;flex-wrap:wrap;gap:18px}
+  .actcol{flex:1;min-width:180px}
+  .ak{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);display:block;margin:0 0 4px}
+  .av{font-family:var(--mono);font-size:11px;color:var(--ink-2);line-height:1.9}
+  .gd{font-family:var(--mono);font-size:10.5px;background:var(--vi-bg);color:var(--vi);padding:2px 8px;border-radius:5px;margin:0 4px 3px 0;display:inline-block;cursor:pointer}
+  .gd:hover{background:var(--vi);color:#fff}
+  .gnone{font-family:var(--mono);font-size:10.5px;color:var(--ink-3)}
+  .gdet{margin:9px 0 0;padding:10px 13px;background:var(--ground);border-radius:8px;font-size:12.5px;color:var(--ink-2)}
+  .gdet b{font-family:var(--mono);color:var(--vi);font-weight:600}
+
+  .fx{display:grid;gap:9px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+  .fc{background:var(--ground);border-radius:10px;padding:13px 15px}
+  .fn{font-size:13.5px;font-weight:700;margin:0 0 2px}
+  .fr2{font-size:12.5px;color:var(--ink-2);margin:0 0 8px}
+  .fe{font-family:var(--mono);font-size:10.5px;color:var(--ink-3);line-height:1.7;word-break:break-all}
+
+  .ax{border:1px solid var(--line);border-radius:11px;padding:13px 15px;margin:0 0 8px;cursor:pointer;transition:border-color .15s}
+  .ax:hover{border-color:var(--ink-3)}
+  .ax[aria-pressed="true"]{border-color:var(--vi);background:var(--vi-bg)}
+  .ax.new{border-left:3px solid var(--te);border-radius:0 11px 11px 0}
+  .axh{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+  .axi{font-family:var(--mono);font-size:10.5px;color:var(--vi);font-weight:600}
+  .axs{font-size:13.5px;font-weight:700;letter-spacing:-.01em;flex:1;min-width:200px}
+  .axw{font-size:12.5px;color:var(--ink-2);margin:5px 0 0}
+  .axck{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);margin:10px 0 4px}
+  .axc span{font-family:var(--mono);font-size:10.5px;background:var(--ground);padding:2px 7px;border-radius:4px;margin:0 4px 3px 0;display:inline-block;color:var(--ink-2)}
+  .ax[aria-pressed="true"] .axc span{background:var(--surface)}
+
+  .prop{border-left:3px solid var(--vi);background:var(--surface);border-radius:0 11px 11px 0;border-top:1px solid var(--line);border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:14px 16px;margin:0 0 9px}
+  .prh{display:flex;align-items:baseline;gap:10px}
+  .pri{font-family:var(--mono);font-size:11px;font-weight:600;color:var(--vi)}
+  .prt{font-size:14px;font-weight:700}
+  .prb{font-size:13px;color:var(--ink-2);margin:6px 0 0}
+
+  .map{width:100%;border-collapse:collapse;font-size:12.5px}
+  .map th{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);text-align:left;padding:0 10px 8px;font-weight:500;border-bottom:1px solid var(--line)}
+  .map td{padding:9px 10px;border-bottom:1px solid var(--line-2);color:var(--ink-2);vertical-align:top}
+  .map td.c{font-family:var(--mono);font-size:11.5px;color:var(--vi);font-weight:600;white-space:nowrap}
+  .foot{margin:20px 0 0;font-size:13px;color:var(--ink-2);max-width:68ch}
+  .foot b{color:var(--ink);font-weight:650}
+  code{font-family:var(--mono);font-size:12px}
+  @media (max-width:700px){.det{grid-template-columns:1fr}.wrap{padding:32px 14px 60px}.seemap{margin-left:0}}
+</style>
+
+<div class="wrap">
+  <p class="eyebrow">Design System Ontology · v5</p>
+  <h1>하기로 한 것과 실제로 있는 것,<br><em>그 사이를 재는 모델</em></h1>
+  <p class="lede">이 모델이 답하려는 질문은 둘이야. <b>"우리가 뭘 하기로 했고, 현실이 그걸 따르고 있나?"</b> 그리고 <b>"지키기로 한 걸 실제로 검사하고 있나?"</b> — 34개 클래스는 전부 이 두 질문에 답하기 위한 부품이야. 실제 데이터는 없고 구조만 있어.</p>
+
+  <div class="layout">
+  <div class="left">
+  <div class="card">
+    <div class="modebar">
+      <span class="mblab">보기</span>
+      <button id="exoff" aria-pressed="true">구조만 (T-Box)</button>
+      <button id="exon" aria-pressed="false">Atlassian 예시로 (A-Box)</button>
+    </div>
+    <h2>두 개의 질문, 두 개의 여정</h2>
+    <p class="sub" style="margin-bottom:10px">첫째 여정은 문서의 문장 하나가 회사의 결정이 되어 현실과 비교되기까지, 둘째 여정은 출발 약속 하나가 검사와 숫자가 되기까지야. 걸음을 하나씩 눌러봐.</p>
+    <div class="tourbar">
+      <div class="tsel" id="tsel"></div>
+      <div class="steps" id="steps"></div>
+    </div>
+    <div class="narr" id="narr" hidden></div>
+    <h3 class="mh">Class — 이 모델에 존재하는 것의 종류, 서른네 개<button class="allbtn" id="allbtn" aria-pressed="false">연결 전체 보기</button></h3>
+    <p class="mhsub">아래 맵의 박스 하나가 Class 하나야. 여덟 개 밴드는 Class 들을 역할별로 묶은 층이고.</p>
+    <p class="exnote" id="exnote" hidden>예시는 아틀라시안 공개 문서(ADS)를 바탕으로 구성한 것 — 실제 내부 데이터가 아니야</p>
+    <p class="hint" id="maphint"><b>박스를 누르면</b> 그것이 무엇과 이어지는지 보여 · 점선은 직접 만들 수 없는 공통 이름 · 초록 밴드가 "하기로 한 것", 주황 밴드가 "실제로 있는 것" 쪽이야</p>
+    <svg id="map" viewBox="0 0 960 982" role="img"><title>온톨로지 v5 클래스 맵</title><desc>조직, 의미, 문서, 약속, 산출물, 관찰, 운영, 지표 여덟 층의 클래스 맵. 의미 층은 승인된 결정을, 관찰 층은 현실을 담고 둘의 비교가 드리프트를 만든다.</desc><g id="g"></g></svg>
+    <div class="det" id="det"></div>
+  </div>
+  </div>
+
+  <div class="right">
+  <div class="card">
+    <h2>Interface — 여러 Class 가 같이 지키는 계약</h2>
+    <p class="sub">"주인이 있어야 한다", "판이 있다", "기록은 못 고친다" — 여러 클래스에 똑같이 적용되는 조건을 클래스마다 반복하지 않고 여기서 한 번만 선언해. 프로그래밍의 인터페이스와 같은 개념이야. <b>카드를 누르면</b> 그 계약을 구현하는 클래스들이 맵에 표시돼.</p>
+    <div id="ifaces"></div>
+  </div>
+
+  <div class="card">
+    <h2>Relation — Class 를 잇는 연결, 마흔두 개 전부</h2>
+    <p class="sub">온톨로지에서 object property, Foundry 에서 Link Type 이라 부르는 것 — Class 와 Class 를 잇는 연결의 종류야. 화살표의 출발 Class 를 정의역(domain), 도착 Class 를 치역(range)이라고 불러. 누르면 그 연결 하나만 맵에 그려져. 이름이 비슷한 것들이 실제로 어떻게 다른지 비교할 때 써.</p>
+    <div class="ridx" id="ridx"></div>
+  </div>
+
+  <div class="card">
+    <h2>Action — 뭔가를 바꾸는 유일한 방법</h2>
+    <p class="sub">이 모델에서는 아무거나 직접 고칠 수 없어. 바꾸려면 여덟 개 문 중 하나를 지나야 하고, 문마다 지켜야 할 조건(공리)이 걸려 있어 — 조건을 못 맞추면 문이 안 열려. <b>맵에서 보기</b>로 각 문이 뭘 건드리는지 확인해.</p>
+    <div id="acts"></div>
+  </div>
+
+  <div class="card">
+    <h2>Metric — "잘 되고 있나?"의 답</h2>
+    <div class="fx" id="fns"></div>
+  </div>
+
+  <div class="card">
+    <h2>Axiom — 언제나 지켜져야 하는 조건</h2>
+    <p class="sub">어기면 의견 차이가 아니라 "만들 수 없음"으로 처리되는 조건들이야. 초록 띠가 이번에 새로 들어온 것들이고, 카드를 누르면 어디에 걸리는지 맵에 표시돼.</p>
+    <div id="axl"></div>
+  </div>
+
+
+  <div class="card">
+    <h2>표준 용어 대응 — 다른 자료를 읽을 때</h2>
+    <p class="sub">이 페이지의 말과 온톨로지 표준(OWL) · Palantir Foundry 의 말을 잇는 표야. 논문이나 문서에서 오른쪽 용어를 만나면 왼쪽으로 번역하면 돼.</p>
+    <table class="map"><thead><tr><th>이 페이지</th><th>OWL 표준</th><th>Foundry</th><th>뜻</th></tr></thead><tbody>
+      <tr><td class="c">Class</td><td>owl:Class</td><td>Object Type</td><td>존재하는 것의 종류. 맵의 박스 하나.</td></tr>
+      <tr><td class="c">인스턴스 (예시 모드)</td><td>individual · A-Box</td><td>Object</td><td>그 종류의 실물 하나. "Atlassian 예시로 보기"가 켜졌을 때 보이는 것들 — R-042, color.text.dark.</td></tr>
+      <tr><td class="c">이 페이지의 구조 전체</td><td>T-Box</td><td>Ontology</td><td>종류와 연결의 정의. 예시 토글이 꺼진 상태가 T-Box, 켜진 상태가 그 위의 A-Box.</td></tr>
+      <tr><td class="c">Relation</td><td>object property</td><td>Link Type</td><td>Class 와 Class 를 잇는 연결의 종류.</td></tr>
+      <tr><td class="c">X 이(가) 가리키는 것</td><td>domain (정의역)</td><td>source</td><td>그 연결이 출발할 수 있는 Class.</td></tr>
+      <tr><td class="c">X 을(를) 가리키는 것</td><td>range (치역)</td><td>target</td><td>그 연결이 도착할 수 있는 Class.</td></tr>
+      <tr><td class="c">반드시 하나 · 없거나 하나 …</td><td>cardinality (다중도)</td><td>min/max</td><td>연결이 몇 개까지 가능한가. 문법이 아니라 설계 결정.</td></tr>
+      <tr><td class="c">Interface</td><td>공유 상위 클래스에 근사</td><td>Interface</td><td>여러 Class 가 같이 지키는 속성 계약.</td></tr>
+      <tr><td class="c">가지는 값</td><td>datatype property</td><td>Property</td><td>값이 글자·숫자로 끝나는 속성. 다른 박스로 이어지지 않는 것.</td></tr>
+      <tr><td class="c">Axiom</td><td>axiom</td><td>Constraint</td><td>언제나 지켜져야 하는 조건.</td></tr>
+      <tr><td class="c">AX-V5-09 같은 것</td><td>owl:disjointWith (서로소)</td><td>—</td><td>"DriftFinding 과 Violation 은 서로 변환되지 않는다" — 두 Class 가 겹칠 수 없다는 선언이 서로소 공리다.</td></tr>
+      <tr><td class="c">Artifact 같은 점선 박스</td><td>abstract class</td><td>Interface 로 표현</td><td>직접 실물을 만들 수 없는 공통 이름.</td></tr>
+    </tbody></table>
+  </div>
+
+  <div class="card">
+    <h2>다음으로 — 더 밀어볼 수 있는 세 방향</h2>
+    <p class="sub">이 모델을 시스템 레벨에서 한 단계 더 밀 수 있는 방향이야. 아직 모델에 넣지 않았고, 넣을지가 다음 결정이야.</p>
+    <div id="props"></div>
+  </div>
+
+  </div>
+  </div>
+
+  <p class="foot"><b>이 화면은 <code>ontology.v5.json</code> 에서 생성됐어.</b> v4의 48개 타입 중 14개는 버린 게 아니라 층위를 내렸어 — Variant·Template 은 예시 데이터가 담을 것이고, RoleGrant·ChangeSet 은 P3 제안이 흡수해.</p>
+</div>
+
+<script>
+const D = {"version":5,"namespace":"dsx","comment":"v4의 개념(Desired/Observed 분리, 후보-승인 파이프라인, 인터페이스)을 v2의 가독 구조로 큐레이션. 48개 타입에서 34개로 압축 — 뺀 것은 버린 게 아니라 예시 층위(Variant, Template 등)로 내린 것.","layers":[{"id":"org","label":"조직","role":"누가 결정하고 책임지는가"},{"id":"sem","label":"의미","role":"우리가 뭘 하기로 했는가 — 결정이 사는 곳"},{"id":"doc","label":"문서·근거","role":"회사가 글로 써둔 것 — 결정의 원문이 나오는 곳"},{"id":"norm","label":"약속","role":"지키기로 한 것과, 그걸 검사에 연결하는 방법"},{"id":"art","label":"산출물","role":"실제로 만들어져 있는 것"},{"id":"obs","label":"관찰·계보","role":"현실을 읽어와서 결정과 비교하는 곳"},{"id":"ops","label":"운영","role":"검사하고, 판정하고, 봐주고, 갈아타는 일"},{"id":"met","label":"지표","role":"잘 되고 있는지 숫자로 확인하는 곳"}],"interfaces":[{"id":"GovernedResource","ko":"거버넌스 대상","gives":["owner","lifecycleStatus","sensitivity"],"reads":"주인과 상태가 있는 모든 것. \"모든 약속엔 주인이 있다\"를 서른네 번 반복하지 않고 여기서 한 번만 말한다.","implementedBy":["Axiom","Rule","Concept","SemanticAssertion","Token","Component","Pattern","Release","MetricDefinition"]},{"id":"VersionedResource","ko":"버전 자원","gives":["version","effectiveFrom","effectiveTo"],"reads":"시점에 따라 유효한 판이 다른 것. \"그때는 그게 맞았다\"를 표현할 수 있게 해준다.","implementedBy":["SemanticAssertion","Rule","Release","DesignIntent"]},{"id":"EventRecord","ko":"사건 기록","gives":["occurredAt","recordedAt","status"],"reads":"일어난 일의 기록. 고칠 수 없고, 뒤에 새 기록이 붙을 뿐이다. 기록이 쌓여야 추세가 보인다.","implementedBy":["SyncRun","ExtractionRun","QualityAssessment","ReconciliationRun","EvaluationRun","SourceObservation","DriftFinding","Violation","Decision","MetricObservation"]}],"classes":[{"id":"Organization","ko":"조직","layer":"org","abstract":false,"definition":"디자인 시스템을 가진 회사.","properties":["name","systemName"]},{"id":"Team","ko":"팀","layer":"org","abstract":false,"definition":"결정을 내리고 책임지는 사람들. 모든 약속과 결정에는 주인이 있어야 하고, 그 주인이 Team 이다.","properties":["name"]},{"id":"Concept","ko":"개념","layer":"sem","abstract":false,"definition":"회사가 달라도 똑같이 존재하는 디자인 주제. 색 대비, 간격, 빈 화면 같은 것 — 이름만 회사마다 다르다.","properties":["label","category"]},{"id":"Concern","ko":"관심사","layer":"sem","abstract":false,"definition":"여러 주제에 두루 걸리는 요구. 접근성, 성능, 브랜드 같은 것.","properties":["id"]},{"id":"Principle","ko":"원칙","layer":"sem","abstract":false,"definition":"둘 다 맞는 말일 때 어느 쪽을 고를지 정해주는 지침.","properties":["statement"]},{"id":"DesignIntent","ko":"디자인 의도","layer":"sem","abstract":false,"definition":"\"왜 이렇게 하기로 했는가\"를 적은 글. 관련된 결정들이 이 아래에 묶인다.","properties":["statement","scope"]},{"id":"SemanticCandidate","ko":"의미 후보","layer":"sem","abstract":false,"definition":"문서에서 찾아낸 \"결정일지도 모르는 문장\". 아직 아무도 승인하지 않았다.","properties":["statement","confidence"]},{"id":"SemanticAssertion","ko":"의미 주장","layer":"sem","abstract":false,"definition":"승인이 끝난 결정 한 개. \"우리는 이렇게 한다\"의 실체이고, 바뀔 때는 고치는 게 아니라 새 판을 낸다.","properties":["value","semanticLevel"]},{"id":"Doc","ko":"문서","layer":"doc","abstract":false,"definition":"회사가 써둔 문서 페이지. 결정의 원문이 여기서 나온다.","properties":["title","url","path"]},{"id":"Evidence","ko":"근거","layer":"doc","abstract":false,"definition":"후보가 문서의 어느 문장에서 나왔는지의 인용. 이게 있어야 추출이 창작이 아니게 된다.","properties":["quote","locator"]},{"id":"Axiom","ko":"공리","layer":"norm","abstract":false,"definition":"\"왜?\"라고 더 물을 수 없는, 시스템의 출발 약속. 발견이 아니라 선택이다.","properties":["statement"]},{"id":"Rule","ko":"규칙","layer":"norm","abstract":false,"definition":"지키는지 검사할 수 있게 적힌 약속. 반드시 Axiom 하나에 뿌리를 둔다.","properties":["statement","enforcement","severity"]},{"id":"EnforcementBinding","ko":"집행 바인딩","layer":"norm","abstract":false,"definition":"어떤 Rule 을 어떤 LintRule 이 어떤 조건에서 검사하는지의 연결 한 건. 연결이 목록이 아니라 기록이라서 조건을 담을 수 있다.","properties":["context","tool"]},{"id":"Artifact","ko":"산출물","layer":"art","abstract":true,"definition":"실제로 만들어져 있는 것들의 공통 이름. 직접 만들 수는 없고 아래 것들 중 하나여야 한다.","properties":["name","status"]},{"id":"Token","ko":"토큰","layer":"art","abstract":false,"definition":"색·간격 같은 시각 값을 담는 가장 작은 단위.","properties":["value","tier"]},{"id":"Component","ko":"컴포넌트","layer":"art","abstract":false,"definition":"Token 을 가져다 쓰는 UI 부품.","properties":["api"]},{"id":"Pattern","ko":"패턴","layer":"art","abstract":false,"definition":"부품을 조합해 만든 상황별 해법. 빈 화면, 삭제 확인 같은 것.","properties":["name"]},{"id":"Release","ko":"릴리스","layer":"art","abstract":false,"definition":"배포된 묶음 하나. 한 번 나가면 바뀌지 않는다.","properties":["semver","publishedAt"]},{"id":"LintRule","ko":"검사기","layer":"art","abstract":false,"definition":"Rule 을 실제로 검사하는 코드. 약속(Rule)과 검사 코드(LintRule)는 다른 것이다.","properties":["ruleId","tool"]},{"id":"DataSource","ko":"데이터소스","layer":"obs","abstract":false,"definition":"Figma, git, npm 처럼 현실을 읽어올 수 있는 곳.","properties":["kind","endpoint"]},{"id":"SyncRun","ko":"동기화 실행","layer":"obs","abstract":false,"definition":"소스를 한 번 읽어온 기록. 언제 무엇을 읽었는지가 남는다.","properties":["startedAt","stats"]},{"id":"SourceObservation","ko":"소스 관찰","layer":"obs","abstract":false,"definition":"그때 실제로 읽힌 값 하나. \"실제로는 이랬다\"의 최소 단위.","properties":["value","locator"]},{"id":"ExtractionRun","ko":"추출 실행","layer":"obs","abstract":false,"definition":"문서에서 후보를 뽑아낸 한 번의 실행. 어떤 모델과 프롬프트를 썼는지가 남아서 다시 돌려볼 수 있다.","properties":["model","promptHash"]},{"id":"QualityAssessment","ko":"품질 평가","layer":"obs","abstract":false,"definition":"후보 하나를 여러 기준으로 채점한 기록.","properties":["scores","verdict"]},{"id":"ReconciliationRun","ko":"조정 실행","layer":"obs","abstract":false,"definition":"\"하기로 한 것\"과 \"실제로 있는 것\"을 나란히 놓고 비교한 한 번의 실행.","properties":["comparedAt","scope"]},{"id":"DriftFinding","ko":"드리프트","layer":"obs","abstract":false,"definition":"비교해 보니 달랐다는 발견 한 건. 규칙을 어긴 게 아니라 결정과 현실이 어긋난 것 — 그래서 Violation 과 다른 것으로 다룬다.","properties":["delta","detectedAt"]},{"id":"EvaluationRun","ko":"평가 실행","layer":"ops","abstract":false,"definition":"규칙 검사를 한 번 돌린 기록. Violation 은 여기서 태어난다.","properties":["ranAt","rulesetVersion"]},{"id":"Violation","ko":"위반","layer":"ops","abstract":false,"definition":"약속이 깨진 기록 한 건. 고쳐져도 지워지지 않고 \"해소됨\"이 적힐 뿐이다.","properties":["detectedAt","resolvedAt"]},{"id":"Exception","ko":"예외","layer":"ops","abstract":false,"definition":"\"이번만 봐주기\"의 공식 기록. 반드시 만료일이 있다 — 기한 없는 봐주기는 약속의 조용한 폐기니까.","properties":["justification","expires"]},{"id":"Decision","ko":"결정","layer":"ops","abstract":false,"definition":"왜 그렇게 정했는지의 기록. 채택·승격·예외가 전부 이걸 남긴다.","properties":["rationale","options"]},{"id":"MigrationPlan","ko":"이관 계획","layer":"ops","abstract":false,"definition":"그만 쓰기로 한 것에서 갈아타는 계획. 링크 하나가 아니라 단계와 기한이 있는 문서다.","properties":["steps","deadline"]},{"id":"ImpactAssessment","ko":"영향 평가","layer":"ops","abstract":false,"definition":"바꾸면 뭐가 깨지는지 미리 계산한 것. 바꾸고 나서 아는 것과 바꾸기 전에 아는 것의 차이.","properties":["predictedScope"]},{"id":"MetricDefinition","ko":"지표 정의","layer":"met","abstract":false,"definition":"무엇을 어떻게 셀지 정해둔 것. 정의가 한 곳에 있어야 누가 조회해도 같은 숫자가 나온다.","properties":["formula","unit"]},{"id":"MetricObservation","ko":"지표 관찰","layer":"met","abstract":false,"definition":"그 지표를 실제로 계산한 시점별 결과. 지표도 쌓여야 추세가 된다.","properties":["value","computedAt"]}],"relations":[{"id":"memberOf","from":"Team","to":"Organization","cardinality":"1","forward":"소속 조직을 지정한다","backward":"조직에 이 팀이 속한다"},{"id":"owns","from":"Team","to":"Rule","cardinality":"0..n","forward":"이 팀이 소유한 규칙을 지정한다","backward":"팀이 이 규칙의 변경 권한을 가진다"},{"id":"addresses","from":"Concept","to":"Concern","cardinality":"0..n","forward":"이 개념이 다루는 품질 요구를 지정한다","backward":"개념이 이 관심사를 다룬다"},{"id":"guides","from":"Principle","to":"Concept","cardinality":"0..n","forward":"판단 기준을 주는 개념을 지정한다","backward":"원칙이 이 개념의 판단 기준을 준다"},{"id":"documents","from":"Doc","to":"Concept","cardinality":"1..n","forward":"이 문서가 다루는 주제를 지정한다","backward":"회사 문서가 이 주제를 다룬다"},{"id":"extractsFrom","from":"ExtractionRun","to":"Doc","cardinality":"1","forward":"후보를 뽑아낸 원문 문서를 지정한다","backward":"이 문서에서 추출이 실행됐다"},{"id":"producesCandidate","from":"ExtractionRun","to":"SemanticCandidate","cardinality":"1..n","forward":"이 실행이 만든 의미 후보를 지정한다","backward":"후보가 이 추출 실행에서 태어났다"},{"id":"supportedBy","from":"SemanticCandidate","to":"Evidence","cardinality":"1..n","forward":"원문의 어느 대목에서 왔는지를 지정한다","backward":"근거가 이 후보를 뒷받침한다"},{"id":"assesses","from":"QualityAssessment","to":"SemanticCandidate","cardinality":"1","forward":"채점 대상 후보를 지정한다","backward":"후보가 이 평가에서 채점됐다"},{"id":"adoptedAs","from":"SemanticCandidate","to":"SemanticAssertion","cardinality":"0..1","forward":"승인되어 만들어진 주장을 지정한다","backward":"주장이 이 후보에서 승인됐다"},{"id":"belongsToIntent","from":"SemanticAssertion","to":"DesignIntent","cardinality":"1","forward":"이 주장이 속한 디자인 의도를 지정한다","backward":"의도가 이 주장을 포함한다"},{"id":"refersTo","from":"SemanticAssertion","to":"Concept","cardinality":"1","forward":"이 주장이 무엇에 관한 것인지를 지정한다","backward":"개념에 대해 이 주장이 승인돼 있다"},{"id":"appliesTo","from":"SemanticAssertion","to":"Artifact","cardinality":"0..n","forward":"이 결정이 해당되는 산출물을 지정한다","backward":"이 산출물은 이 결정을 따라야 한다"},{"id":"supersedes","from":"SemanticAssertion","to":"SemanticAssertion","cardinality":"0..1","forward":"이전 판을 지정한다 — 이 판이 나오면서 이전 판은 물러났다","backward":"이 결정은 다음 판이 나와 물러났다"},{"id":"justifiedBy","from":"Rule","to":"Axiom","cardinality":"1","forward":"근거가 되는 공리를 하나 지정한다","backward":"규칙이 이 공리를 근거로 삼는다"},{"id":"basedOn","from":"Rule","to":"SemanticAssertion","cardinality":"0..n","forward":"이 약속이 딛고 선 결정을 지정한다","backward":"이 결정 위에 약속이 세워져 있다"},{"id":"governsConcept","from":"Rule","to":"Concept","cardinality":"1..n","forward":"이 약속이 다루는 주제를 지정한다","backward":"이 주제에 이 약속이 걸려 있다"},{"id":"bindsRule","from":"EnforcementBinding","to":"Rule","cardinality":"1","forward":"묶는 규칙을 지정한다","backward":"규칙이 이 바인딩으로 검사에 연결된다"},{"id":"bindsChecker","from":"EnforcementBinding","to":"LintRule","cardinality":"1","forward":"실제 검사를 수행할 구현을 지정한다","backward":"검사기가 이 바인딩을 통해 규칙을 맡는다"},{"id":"consumes","from":"Component","to":"Token","cardinality":"0..n","forward":"사용하는 토큰을 지정한다","backward":"컴포넌트가 이 토큰을 사용한다"},{"id":"composedIn","from":"Pattern","to":"Component","cardinality":"1..n","forward":"패턴을 구성하는 컴포넌트를 지정한다","backward":"컴포넌트가 이 패턴에 들어간다"},{"id":"packagedIn","from":"Component","to":"Release","cardinality":"0..n","forward":"배포된 릴리스를 지정한다","backward":"릴리스가 이 컴포넌트를 담고 있다"},{"id":"readsSource","from":"SyncRun","to":"DataSource","cardinality":"1","forward":"읽어들인 소스를 지정한다","backward":"이 소스가 동기화에서 읽혔다"},{"id":"observes","from":"SyncRun","to":"SourceObservation","cardinality":"0..n","forward":"이 실행이 남긴 관찰값을 지정한다","backward":"관찰값이 이 동기화에서 기록됐다"},{"id":"observationOf","from":"SourceObservation","to":"Artifact","cardinality":"1","forward":"무엇을 읽은 것인지 지정한다","backward":"이 산출물이 소스에서 실제로 읽혔다"},{"id":"reconcilesDesired","from":"ReconciliationRun","to":"SemanticAssertion","cardinality":"1","forward":"비교의 기준 — \"하기로 한 것\"을 지정한다","backward":"이 결정이 비교의 기준으로 쓰였다"},{"id":"reconcilesObserved","from":"ReconciliationRun","to":"SourceObservation","cardinality":"1..n","forward":"비교의 대상 — \"실제로 읽힌 것\"을 지정한다","backward":"이 관찰값이 결정과 비교됐다"},{"id":"findsDrift","from":"ReconciliationRun","to":"DriftFinding","cardinality":"0..n","forward":"발견한 불일치를 지정한다","backward":"드리프트가 이 조정에서 발견됐다"},{"id":"driftOn","from":"DriftFinding","to":"Artifact","cardinality":"1","forward":"불일치가 난 산출물을 지정한다","backward":"이 산출물에서 드리프트가 났다"},{"id":"evaluates","from":"EvaluationRun","to":"Rule","cardinality":"1..n","forward":"검사한 규칙을 지정한다","backward":"규칙이 이 실행에서 검사됐다"},{"id":"detects","from":"EvaluationRun","to":"Violation","cardinality":"0..n","forward":"이 실행이 찾아낸 위반을 지정한다","backward":"위반이 이 평가에서 발견됐다"},{"id":"violates","from":"Violation","to":"Rule","cardinality":"1","forward":"어겨진 규칙을 하나 지정한다","backward":"이 규칙이 어겨진 기록이 있다"},{"id":"foundIn","from":"Violation","to":"Artifact","cardinality":"1","forward":"위반이 발견된 산출물을 지정한다","backward":"이 산출물에서 위반이 발견됐다"},{"id":"exempts","from":"Exception","to":"Rule","cardinality":"1","forward":"잠시 적용을 멈출 약속을 지정한다","backward":"이 약속은 지금 예외로 잠시 멈춰 있다"},{"id":"grantedBy","from":"Exception","to":"Team","cardinality":"1","forward":"예외를 승인한 팀을 지정한다","backward":"팀이 이 예외를 승인했다"},{"id":"decidedBy","from":"Decision","to":"Team","cardinality":"1","forward":"결정을 내린 팀을 지정한다","backward":"팀이 이 결정을 내렸다"},{"id":"plansFor","from":"MigrationPlan","to":"Artifact","cardinality":"1","forward":"이관 대상 산출물을 지정한다","backward":"이 산출물의 폐기가 계획돼 있다"},{"id":"previews","from":"ImpactAssessment","to":"SemanticAssertion","cardinality":"1","forward":"영향을 미리 계산한 대상 결정을 지정한다","backward":"이 결정을 바꾸면 어떻게 되는지 계산돼 있다"},{"id":"predictsImpactOn","from":"ImpactAssessment","to":"Artifact","cardinality":"0..n","forward":"깨질 것으로 예측된 산출물을 지정한다","backward":"이 산출물은 바꾸면 깨질 것으로 예측됐다"},{"id":"measures","from":"MetricObservation","to":"MetricDefinition","cardinality":"1","forward":"어느 지표 정의의 계산인지를 지정한다","backward":"이 정의가 시점별로 계산됐다"},{"id":"countsViolation","from":"MetricDefinition","to":"Violation","cardinality":"0..n","forward":"셈에 들어가는 위반 기록을 지정한다","backward":"이 위반은 지표 계산에 들어간다"},{"id":"countsDrift","from":"MetricDefinition","to":"DriftFinding","cardinality":"0..n","forward":"셈에 들어가는 어긋남 기록을 지정한다","backward":"이 어긋남은 지표 계산에 들어간다"}],"actions":[{"id":"adoptSemanticCandidate","ko":"의미 후보 채택","inputs":["candidate","intent","owner","value","rationale"],"guards":["AX-V5-04"],"effects":["SemanticAssertion 생성","adoptedAs 링크 생성","Decision 기록"],"note":"채점을 통과하지 못한 후보는 승인할 수 없어. 승인하면 누가 왜 했는지가 반드시 남아."},{"id":"applyScopedSemanticEdit","ko":"범위형 의미 편집","inputs":["assertion","newValue","scope","impactAssessment"],"guards":["AX-V5-06"],"effects":["새 판의 SemanticAssertion 생성","supersedes 링크","이전 판 유효기간 마감"],"note":"결정은 고치는 게 아니라 새 판을 내는 거야. 그리고 새 판은 \"뭐가 깨지나\" 계산 없이는 못 나와."},{"id":"promoteToRule","ko":"규칙 승격","inputs":["statement","axiom","assertions","enforcement","severity"],"guards":["AX-V5-01","AX-V5-02"],"effects":["Rule 생성","justifiedBy·basedOn 링크"],"note":"뿌리 없는 문장과 검사 방법이 애매한 문장은 약속이 될 수 없어."},{"id":"bindEnforcement","ko":"집행 연결","inputs":["rule","lintRule","context"],"guards":[],"effects":["EnforcementBinding 생성"],"note":"약속과 검사 코드를 잇는 일. 연결이 기록이라서 \"다크 테마에서만 검사\" 같은 조건을 담을 수 있어."},{"id":"grantException","ko":"예외 승인","inputs":["rule","artifact","justification","expires"],"guards":["AX-V5-07"],"effects":["Exception 생성"],"note":"만료일 없는 봐주기는 만들 수 없어."},{"id":"resolveViolation","ko":"위반 해소","inputs":["violation","resolution"],"guards":[],"effects":["resolvedAt 기록"],"note":"해소는 지우기가 아니라 \"해소됨\"이라고 적기야. 기록은 남는다."},{"id":"deprecateArtifact","ko":"산출물 폐기","inputs":["artifact","migrationPlan"],"guards":["AX-V5-08"],"effects":["status → deprecated","plansFor 링크"],"note":"갈아탈 계획서 없이는 폐기할 수 없어. 이미 나간 릴리스는 그대로 둔다."},{"id":"adoptAxiom","ko":"공리 채택","inputs":["statement","optionsConsidered","rationale"],"guards":[],"effects":["Axiom 생성","Decision 기록"],"note":"출발 약속은 선택이니까, 왜 그걸 골랐는지가 반드시 남아."}],"metrics":[{"id":"coverage","ko":"문서 커버리지","formula":"count(Concept with Doc) / count(Concept)","reads":"주제 중에 문서가 다루는 비율"},{"id":"assertionRatio","ko":"의미 승인률","formula":"count(Candidate adoptedAs) / count(Candidate assessed)","reads":"찾아낸 후보 중 실제로 승인된 비율 — 추출이 쓸 만한지의 신호"},{"id":"unenforcedRate","ko":"미집행률","formula":"count(Rule without EnforcementBinding) / count(Rule)","reads":"약속 중에 아무도 검사하지 않는 비율"},{"id":"driftRate","ko":"드리프트율","formula":"count(open DriftFinding) / count(SemanticAssertion reconciled)","reads":"하기로 한 것 중에 현실과 어긋나 있는 비율"},{"id":"exceptionDebt","ko":"예외 부채","formula":"count(Exception where expires > now)","reads":"지금 살아 있는 \"봐주기\"의 수"},{"id":"mttr","ko":"평균 해소 시간","formula":"avg(resolvedAt - detectedAt) over Violation","reads":"위반이 발견되고 닫히기까지 걸리는 평균 시간"},{"id":"staleness","ko":"관찰 신선도","formula":"now - max(SyncRun.startedAt) per DataSource","reads":"각 소스를 마지막으로 읽은 뒤 지난 시간 — \"실제로는\"을 얼마나 믿을 수 있나"}],"axioms":[{"id":"AX-V5-01","statement":"모든 Rule 은 정확히 하나의 Axiom 으로 추적된다","why":"뿌리 없는 약속은 약속이 아니라 취향이다","constrains":["Rule","Axiom"]},{"id":"AX-V5-02","statement":"모든 Rule 의 enforcement 값은 정확히 하나다","why":"검사 방법이 둘이면 약속이 아니라 페이지다 — 쪼개라는 신호","constrains":["Rule","Doc"]},{"id":"AX-V5-03","statement":"모든 GovernedResource 는 정확히 하나의 Team 이 소유한다","why":"주인 없는 약속은 아무도 못 바꾸거나 아무나 바꾼다. 이 조건은 인터페이스에서 한 번만 말한다","constrains":["Team","Rule","Axiom","SemanticAssertion","Token","Component"]},{"id":"AX-V5-04","statement":"SemanticAssertion 은 품질 평가를 통과한 Candidate 에서만 생성된다","why":"채점 없이 승인하면 추출 실수가 그대로 회사의 결정이 된다","constrains":["SemanticAssertion","SemanticCandidate","QualityAssessment"]},{"id":"AX-V5-05","statement":"모든 SemanticCandidate 는 하나 이상의 Evidence 를 가진다","why":"원문 근거가 없으면 찾은 게 아니라 지어낸 것이다","constrains":["SemanticCandidate","Evidence"]},{"id":"AX-V5-06","statement":"승인된 의미의 변경은 ImpactAssessment 를 동반한 새 판 발행으로만 가능하다","why":"제자리 수정은 이력을 지우고, 영향 계산 없는 변경은 뭐가 깨질지 모른 채 깬다","constrains":["SemanticAssertion","ImpactAssessment"]},{"id":"AX-V5-07","statement":"모든 Exception 은 expires 를 가져야 한다","why":"기한 없는 봐주기는 약속을 조용히 폐기하는 것과 같다","constrains":["Exception"]},{"id":"AX-V5-08","statement":"deprecated Artifact 는 유효한 MigrationPlan 을 가져야 하고, Release 는 불변이다","why":"링크 하나로는 갈아타기가 실행되지 않는다. 계획이 기록이어야 단계와 기한을 검사할 수 있다","constrains":["Artifact","MigrationPlan","Release"]},{"id":"AX-V5-09","statement":"DriftFinding 은 Violation 과 다른 클래스다 — 서로 변환되지 않는다","why":"위반은 약속을 어긴 것, 어긋남은 결정과 현실이 갈라진 것. 처방이 다르니 섞으면 안 된다","constrains":["DriftFinding","Violation"]},{"id":"AX-V5-10","statement":"모든 Run(동기화·추출·평가·조정)은 EventRecord 로서 불변이다","why":"실행 기록을 고칠 수 있으면 \"다시 돌려보기\"와 감사가 무너진다","constrains":["SyncRun","ExtractionRun","EvaluationRun","ReconciliationRun"]},{"id":"AX-V5-11","statement":"ExtractionRun 과 QualityAssessment 는 모델·프롬프트 식별자를 기록한다","why":"LLM 의 판정은 기록이 없으면 재현되지 않는다. 판정 기준도 관리 대상이다","constrains":["ExtractionRun","QualityAssessment"]},{"id":"AX-V5-12","statement":"Violation 과 DriftFinding 은 해소되어도 삭제되지 않는다","why":"지우면 추세가 끊긴다. 열린 것과 닫힌 것을 같이 세어야 나아지는지 보인다","constrains":["Violation","DriftFinding","MetricDefinition"]}],"tours":{"semantic":{"label":"우리가 뭘 하기로 했고, 현실이 따르고 있나","steps":[{"t":"문서에서 결정 후보를 찾는다","n":"회사 문서를 읽어서 \"이거 결정 같은데?\" 싶은 문장을 뽑아. 뽑은 실행(ExtractionRun)에 어떤 모델·프롬프트를 썼는지 남아서, 나중에 똑같이 다시 돌려볼 수 있어.","c":["ExtractionRun","Doc","SemanticCandidate"],"r":["extractsFrom","producesCandidate"]},{"t":"출처와 품질을 확인한다","n":"모든 후보는 원문 인용(Evidence)이 있어야 해 — 없으면 찾은 게 아니라 지어낸 거니까(AX-V5-05). 그리고 여러 기준으로 채점(QualityAssessment)을 받아.","c":["SemanticCandidate","Evidence","QualityAssessment"],"r":["supportedBy","assesses"]},{"t":"사람이 승인해서 결정이 된다","n":"채점을 통과한 후보만 승인될 수 있어(AX-V5-04). 승인하면 SemanticAssertion — \"우리는 이렇게 한다\" — 가 되고, 누가 왜 승인했는지(Decision)가 남아. 여기부터가 \"하기로 한 것\"이야.","c":["SemanticCandidate","SemanticAssertion","Decision","Team","DesignIntent"],"r":["adoptedAs","decidedBy","belongsToIntent"]},{"t":"약속이 결정 위에 선다","n":"Rule 은 두 발로 서. 한 발은 Axiom(왜 옳은가), 한 발은 SemanticAssertion(뭘 하기로 했나) — basedOn 이 그 다리야. 결정이 바뀌면 어느 약속이 흔들리는지 이 다리를 타고 알 수 있어.","c":["Rule","Axiom","SemanticAssertion","Concept"],"r":["justifiedBy","basedOn","governsConcept"]},{"t":"현실을 읽어온다","n":"Figma·git·npm 을 주기적으로 읽어서(SyncRun) \"실제로는 이랬다\"(SourceObservation)를 쌓아. 승인 여부와 무관하게, 있는 그대로.","c":["DataSource","SyncRun","SourceObservation","Artifact"],"r":["readsSource","observes","observationOf"]},{"t":"하기로 한 것과 실제를 비교한다","n":"ReconciliationRun 이 둘을 나란히 놓아. 다르면 DriftFinding — 어긋남이야. 규칙 위반이 아니야. 누가 잘못한 게 아니라 결정과 현실이 갈라진 거고, 고치는 방법도 둘이야: 현실을 결정에 맞추거나, 결정을 바꾸거나(AX-V5-09).","c":["ReconciliationRun","SemanticAssertion","SourceObservation","DriftFinding","Artifact"],"r":["reconcilesDesired","reconcilesObserved","findsDrift","driftOn"]},{"t":"바꾸려면 영향을 먼저 계산한다","n":"결정을 바꾸는 쪽을 택했다면, 뭐가 깨지는지(ImpactAssessment) 먼저 계산해야 새 판을 낼 수 있어(AX-V5-06). 바꾸고 나서 아는 게 아니라 바꾸기 전에 알아.","c":["ImpactAssessment","SemanticAssertion","Artifact"],"r":["previews","predictsImpactOn","supersedes"]}]},"rule":{"label":"지키기로 한 걸 실제로 검사하고 있나","steps":[{"t":"출발 약속을 정한다","n":"팀이 Axiom 을 채택해. \"왜?\"를 더 물을 수 없는 약속이라 선택의 기록(Decision)과 주인(Team)이 반드시 남아(AX-V5-03).","c":["Axiom","Decision","Team"],"r":["decidedBy","owns"]},{"t":"검사할 수 있는 약속으로 만든다","n":"Axiom 은 검사가 안 돼 — \"모든 텍스트는 잘 보여야 한다\"를 어떻게 검사해? 그래서 \"대비 4.5:1 이상\"처럼 검사 가능한 Rule 로 구체화해. 뿌리(justifiedBy)와 근거 결정(basedOn)이 확인돼야 통과야(AX-V5-01·02).","c":["Rule","Axiom","SemanticAssertion"],"r":["justifiedBy","basedOn"]},{"t":"검사 코드에 연결한다","n":"약속(Rule)과 검사 코드(LintRule)를 EnforcementBinding 이 이어. 이 연결이 없는 Rule 은 \"문서에만 있는 약속\" — 아무도 검사하지 않는다는 뜻이고, 그 수가 미집행률이 돼.","c":["EnforcementBinding","Rule","LintRule"],"r":["bindsRule","bindsChecker"]},{"t":"검사가 돌고 위반이 남는다","n":"EvaluationRun 이 규칙 검사를 돌리고, 걸리면 Violation 이 남아. 어느 버전의 규칙으로 검사했는지도 남아서(AX-V5-10) 나중에 \"그때 기준으론 통과였는데?\"를 확인할 수 있어.","c":["EvaluationRun","Rule","Violation","Artifact"],"r":["evaluates","detects","violates","foundIn"]},{"t":"봐주거나, 고친다","n":"릴리스가 급하면 만료일 있는 예외(Exception)를 받아(AX-V5-07). 아니면 고치고 해소를 기록해. 어느 쪽도 위반 기록을 지우지는 않아(AX-V5-12) — 지우면 추세를 못 보니까.","c":["Exception","Rule","Team","Violation"],"r":["exempts","grantedBy"]},{"t":"그만 쓸 땐 갈아탈 계획부터","n":"산출물을 폐기하려면 supersededBy 링크 하나로는 안 되고, 단계와 기한이 있는 MigrationPlan 이 있어야 해(AX-V5-08). 이미 나간 Release 는 건드리지 않아.","c":["MigrationPlan","Artifact","Release"],"r":["plansFor","packagedIn"]},{"t":"전부 숫자가 된다","n":"위반과 어긋남이 지표(MetricDefinition)로 집계되고 시점별로 쌓여(MetricObservation). 미집행률, 어긋남 비율, 평균 해소 시간 — \"잘 되고 있나?\"의 답이 처음으로 숫자가 되는 곳이야.","c":["MetricDefinition","MetricObservation","Violation","DriftFinding"],"r":["countsViolation","countsDrift","measures"]}]}},"proposals":[{"id":"P1","title":"\"하기로 한 것 vs 실제\" 비교를 약속 층까지","body":"지금은 토큰 값과 결정에만 \"하기로 한 것 vs 실제\" 비교를 돌려. 그런데 약속 자체도 어긋나 — 모델에 적힌 Rule 과 실제 CI 의 lint 설정이 다르면, 거버넌스가 자기 자신에 대해 거짓말을 하는 셈이야. EnforcementBinding 에도 관찰을 붙여서 미집행률을 \"선언 기준\"이 아니라 \"실측 기준\"으로 만들자는 제안."},{"id":"P2","title":"판정 기준을 GovernedResource 로","body":"LLM 이 채점할 때 쓰는 기준 문서가 지금은 모델 바깥에 있어. 기준을 버전 있는 관리 대상(GovernedResource)으로 올리면 — 기준이 바뀌었을 때 어느 평가가 옛 기준이었는지 추적되고, 기준 변경에도 영향 계산을 요구할 수 있어. SuperTony 의 judge criteria 라이브러리가 정확히 이 자리의 인스턴스가 돼."},{"id":"P3","title":"후보-채점-승인 흐름을 약속·출발 약속·토큰까지","body":"\"후보 → 채점 → 사람 승인\" 흐름이 지금은 결정(의미)에만 있어. 그런데 Rule 도, Axiom 도, Token 도 똑같이 \"검토 중\"과 \"확정됨\"이 있잖아. 클래스를 늘리지 말고 lifecycleStatus 에 proposed 를 넣어서, 이 흐름을 모델 전체의 단일 문법으로 만들자는 제안."}],"examples":{"note":"전부 아틀라시안 공개 문서(ADS)를 바탕으로 구성한 그럴법한 예시다. 실제 내부 데이터가 아니다.","classes":{"Organization":{"name":"Atlassian","d":"Atlassian Design System(ADS)을 운영하는 조직."},"Team":{"name":"ADS Core","d":"ADS 를 소유한 팀. 이 서사의 모든 결정과 약속의 주인."},"Concept":{"name":"color.contrast","d":"텍스트 대비라는 주제. Material 에도 Polaris 에도 있는, 회사 독립적인 주제."},"Concern":{"name":"accessibility","d":"대비 결정이 다루는 품질 요구 — 접근성."},"Principle":{"name":"접근성 > 미학","d":"\"접근성이 미학에 우선한다\" — 대비를 낮추자는 브랜드 요구가 오면 이 원칙이 판정한다."},"DesignIntent":{"name":"읽을 수 있는 텍스트","d":"\"모든 사용자가 모든 테마에서 텍스트를 읽을 수 있어야 한다\" — 대비 관련 결정들이 이 의도 아래 묶인다."},"SemanticCandidate":{"name":"대비 4.5:1 후보","d":"ADS Color 문서에서 추출된 문장: \"본문 텍스트 대비는 4.5:1 이상\". 2026-07-12 추출, 아직 미승인 상태였던 것."},"SemanticAssertion":{"name":"contrast.body=4.5:1","d":"승인 완료된 결정, 현재 v2. v1 은 light 테마만 다뤘고, v2 에서 dark 를 포함하며 supersedes 로 교체됐다."},"Doc":{"name":"ADS › Color","d":"atlassian.design 의 Foundations › Color 페이지. 원래 enforcement 가 Both 였던, 분해 대상 1호."},"Evidence":{"name":"WCAG AA 인용","d":"Color 페이지의 \"Text must meet WCAG AA contrast\" 문장. 후보가 이 인용을 근거로 가진다."},"Axiom":{"name":"AX-07","d":"\"모든 텍스트는 지정된 최소 대비를 만족한다\" — 왜냐고 물으면 답이 없는 출발 약속. ADS Core 가 채택."},"Rule":{"name":"R-042","d":"\"본문 텍스트 대비는 4.5:1 이상이어야 한다\" · deterministic · error. 뿌리는 AX-07, 근거 결정은 contrast.body."},"EnforcementBinding":{"name":"R-042 ↔ eslint","d":"R-042 를 @atlaskit ESLint 의 대비 검사 규칙에 연결. 조건: web 플랫폼, 모든 테마."},"Artifact":{"name":"(공통 이름)","d":"아래 토큰·컴포넌트·릴리스가 전부 Artifact 다. 직접 인스턴스는 없다."},"Token":{"name":"color.text.dark","d":"다크 테마 본문 텍스트 토큰. 승인값 #B6C2CF — 이 값이 이 서사의 주인공이다."},"Component":{"name":"Button","d":"color.text 계열 토큰을 소비하는 컴포넌트. ADS 문서의 그 Button."},"Pattern":{"name":"파괴적 액션 확인","d":"삭제 전 확인 모달 패턴. Button 과 Modal dialog 를 조합한다."},"Release":{"name":"@atlaskit/button 17.2.0","d":"npm 에 배포된 불변 릴리스. Button (legacy) 폐기 뒤에도 이 릴리스는 남는다."},"LintRule":{"name":"ensure-contrast","d":"ESLint 플러그인의 대비 검사 구현. R-042 라는 약속과는 다른 것 — 이건 코드다."},"DataSource":{"name":"Figma ADS 라이브러리","d":"디자인 쪽 현실이 사는 곳. git(atlassian-frontend)과 npm 도 각각 DataSource 다."},"SyncRun":{"name":"8/18 03:00 동기화","d":"매일 새벽 Figma 라이브러리를 읽는 실행. 이날 변수 1,204개를 읽었다."},"SourceObservation":{"name":"Figma #A9B4C0","d":"동기화가 읽은 값: Figma 의 다크 텍스트 변수가 #A9B4C0. 승인값 #B6C2CF 와 다르다 — 누군가 Figma 에서만 고쳤다."},"ExtractionRun":{"name":"7/12 Color 추출","d":"ADS Color 페이지에서 후보 5개를 뽑은 실행. 모델·프롬프트 해시가 기록돼 재현 가능."},"QualityAssessment":{"name":"후보 채점 4.9/5","d":"대비 후보의 10차원 채점. 공리 추적·검사 가능성 만점, verdict: pass."},"ReconciliationRun":{"name":"8/18 주간 조정","d":"승인값과 Figma·git 관찰값을 나란히 비교한 실행. 여기서 다크 토큰 불일치가 발견됐다."},"DriftFinding":{"name":"다크 대비 4.2:1","d":"승인 #B6C2CF(4.6:1) vs Figma #A9B4C0(4.2:1). 규칙 위반이 아니라 결정과 현실의 어긋남 — Figma 를 되돌리거나 결정을 v3 로 바꾸거나."},"EvaluationRun":{"name":"PR #8841 검사","d":"Jira 프론트엔드 PR 의 CI 에서 R-042 포함 규칙 집합을 돌린 실행."},"Violation":{"name":"raw #6B778C 사용","d":"Jira Create dialog 가 토큰 대신 raw 색상 #6B778C 를 써서 대비 미달. R-042 위반으로 기록."},"Exception":{"name":"배너 예외 ~9/30","d":"마케팅 배너가 브랜드 색 유지를 위해 R-042 예외 승인. 만료 9/30 — 지나면 자동으로 다시 위반."},"Decision":{"name":"7/15 채택 결정","d":"ADS Core 가 대비 후보를 승인한 기록. 검토한 대안(4.5 vs 7:1)과 채택 이유가 남아 있다."},"MigrationPlan":{"name":"Button(legacy)→Next","d":"레거시 버튼 폐기 계획: 3단계, 기한 12월, 각 단계에 검증 조건. 이게 있어야 폐기가 실행된다."},"ImpactAssessment":{"name":"7:1 상향 영향","d":"대비 기준을 7:1 로 올리는 제안의 사전 계산: 토큰 214개 중 31개, 컴포넌트 12개 영향."},"MetricDefinition":{"name":"unenforcedRate","d":"약속 중 검사 안 되는 비율의 정의."},"MetricObservation":{"name":"8월: 42%","d":"8월 계산 결과 미집행률 42% — ADS 의 Qual 문서들이 아직 바인딩이 없어서. 7월 46%에서 개선."}},"tours":{"semantic":["ADS 의 Foundations › Color 페이지에서 후보 5개가 뽑혔어. 그중 하나가 \"본문 텍스트 대비 4.5:1\".","후보의 근거는 페이지의 WCAG AA 문장 인용이고, 채점은 4.9/5 — 공리 추적과 검사 가능성이 만점.","7/15 에 ADS Core 가 승인. 이제 contrast.body=4.5:1 은 회사의 결정이고, \"읽을 수 있는 텍스트\" 의도에 묶였어.","R-042 가 이 결정 위에 섰어. 뿌리는 AX-07. 나중에 결정이 7:1 로 바뀌면 R-042 가 흔들린다는 걸 basedOn 이 알려줘.","매일 새벽 Figma 와 git 을 읽어. 8/18 동기화가 Figma 다크 텍스트 변수에서 #A9B4C0 을 읽었어.","주간 조정이 승인값 #B6C2CF 와 비교 — 다르네. DriftFinding: 다크 대비가 4.6 이 아니라 4.2:1. 누가 잘못한 게 아니라 Figma 에서만 고쳐진 것.","고치는 길은 둘: Figma 를 되돌리거나, 결정을 v3 로 바꾸거나. 바꾸는 쪽이면 영향 계산부터 — 7:1 상향안은 토큰 31개에 영향이 있다고 나왔어."],"rule":["ADS Core 가 AX-07 을 채택했어: \"모든 텍스트는 지정된 최소 대비를 만족한다\". 4.5 냐 7 이냐 검토한 기록이 Decision 에 남아 있어.","AX-07 은 검사가 안 되지. 그래서 R-042: \"본문 텍스트 대비 4.5:1 이상\" · deterministic · error 로 구체화했어.","R-042 를 @atlaskit ESLint 의 ensure-contrast 에 연결. ADS 의 Qual 문서 22개는 아직 이 연결이 없어서 미집행으로 집계돼.","Jira 프론트엔드 PR #8841 의 CI 가 검사를 돌렸고, Create dialog 가 raw 색상 #6B778C 를 쓰다 걸렸어. Violation 기록.","마케팅 배너는 브랜드 색을 지켜야 해서 9/30 까지 예외를 받았고, Jira 쪽은 토큰으로 고치고 해소를 기록했어. 둘 다 기록은 남아.","Button (legacy) 는 폐기 대상인데, 3단계·기한 12월짜리 MigrationPlan 이 승인되고서야 deprecated 가 됐어. 17.2.0 릴리스는 그대로 남고.","8월 지표: 미집행률 42%(7월 46%), 열린 드리프트 3건, 평균 해소 시간 4.2일. \"나아지고 있나?\"에 처음으로 숫자로 답할 수 있어."]},"interfaces":{"GovernedResource":"R-042 의 주인은 ADS Core, 상태는 approved — 이 컬럼들이 전부 이 계약에서 왔다.","VersionedResource":"contrast.body 는 v1(light만) → v2(dark 포함) — \"판이 있다\"는 게 이 계약이다.","EventRecord":"8/18 동기화, PR #8841 검사, 어긋남 발견 — 전부 고칠 수 없는 기록으로 남았다."},"relations":{"memberOf":"ADS Core 는 Atlassian 소속이다","owns":"ADS Core 가 R-042 의 변경 권한을 가진다","addresses":"color.contrast 는 accessibility 를 다룬다","guides":"\"접근성 > 미학\" 원칙이 color.contrast 의 판단 기준을 준다","documents":"ADS › Color 페이지가 color.contrast 를 다룬다","extractsFrom":"7/12 추출 실행이 ADS › Color 페이지를 읽었다","producesCandidate":"그 실행이 \"대비 4.5:1\" 후보를 만들었다","supportedBy":"후보의 근거는 WCAG AA 문장 인용이다","assesses":"4.9/5 채점이 그 후보를 평가했다","adoptedAs":"후보가 승인되어 contrast.body 결정이 됐다","belongsToIntent":"contrast.body 는 \"읽을 수 있는 텍스트\" 의도에 속한다","refersTo":"contrast.body 는 color.contrast 주제에 관한 결정이다","appliesTo":"contrast.body 는 color.text.dark 토큰에 해당한다","supersedes":"v2 가 light 만 다루던 v1 을 물렸다","justifiedBy":"R-042 의 뿌리는 AX-07 이다","basedOn":"R-042 는 contrast.body 결정 위에 서 있다","governsConcept":"R-042 는 color.contrast 주제를 다룬다","bindsRule":"바인딩 한 건이 R-042 를 묶는다","bindsChecker":"같은 바인딩이 ensure-contrast 검사 코드를 지정한다","consumes":"Button 이 color.text.dark 토큰을 쓴다","composedIn":"파괴적 액션 확인 패턴이 Button 을 조합한다","packagedIn":"Button 은 @atlaskit/button 17.2.0 에 담겨 나갔다","readsSource":"8/18 03:00 동기화가 Figma 라이브러리를 읽었다","observes":"그 동기화가 #A9B4C0 관찰값을 남겼다","observationOf":"그 관찰은 color.text.dark 를 읽은 것이다","reconcilesDesired":"주간 조정의 기준은 contrast.body 승인값이다","reconcilesObserved":"비교 대상은 Figma 의 #A9B4C0 관찰이다","findsDrift":"조정이 \"다크 대비 4.2:1\" 어긋남을 발견했다","driftOn":"어긋남이 난 곳은 color.text.dark 토큰이다","evaluates":"PR #8841 검사가 R-042 를 돌렸다","detects":"그 검사가 raw 색상 위반을 찾아냈다","violates":"그 위반이 어긴 약속은 R-042 다","foundIn":"위반이 난 곳은 Create dialog 컴포넌트다","exempts":"배너 예외가 R-042 의 적용을 9/30 까지 멈춘다","grantedBy":"그 예외는 ADS Core 가 승인했다","decidedBy":"7/15 채택 결정의 주인은 ADS Core 다","plansFor":"이관 계획의 대상은 Button (legacy) 다","previews":"7:1 상향 영향 평가가 contrast.body 변경을 계산했다","predictsImpactOn":"토큰 31개가 영향권으로 예측됐다","measures":"\"8월 42%\" 는 unenforcedRate 정의의 계산 결과다","countsViolation":"미집행률·MTTR 셈에 raw 색상 위반이 들어간다","countsDrift":"드리프트율 셈에 다크 대비 어긋남이 들어간다"},"actions":{"adoptSemanticCandidate":"7/15 — 채점 4.9/5 를 통과한 대비 후보를 ADS Core 가 승인. contrast.body v1 탄생.","applyScopedSemanticEdit":"다크 테마를 포함한 v2 발행 — 영향 평가를 먼저 통과하고 v1 을 물렸다.","promoteToRule":"contrast.body 위에 R-042 승격 — AX-07 추적과 집행 단일성 확인 후 통과.","bindEnforcement":"R-042 ↔ ensure-contrast 연결 생성. 조건: web 플랫폼, 모든 테마.","grantException":"마케팅 배너에 만료 9/30 짜리 예외 승인 — 만료일이 없었다면 이 문이 안 열렸다.","resolveViolation":"Jira 가 raw 색상을 토큰으로 교체하는 커밋을 올리고, 위반에 \"해소됨\"이 적혔다.","deprecateArtifact":"Button (legacy) 폐기 — 3단계·12월 기한 MigrationPlan 이 승인되고서야 실행됐다.","adoptAxiom":"AX-07 채택 — 4.5:1 과 7:1 을 검토한 기록이 Decision 으로 남았다."},"metrics":{"coverage":"주제 64개 중 47개에 문서 — 73%","assertionRatio":"Color 페이지 후보 5개 중 4개 승인 — 80% (1개는 취향 강등)","unenforcedRate":"8월 42% — Qual 문서 22건이 아직 바인딩 없음. 7월 46%에서 개선","driftRate":"조정된 결정 12개 중 열린 어긋남 3건 — 25%","exceptionDebt":"살아 있는 예외 1건 — 배너, 9/30 만료","mttr":"위반이 평균 4.2일 만에 닫힌다","staleness":"Figma 6시간 전 · git 40분 전 · npm 2일 전에 마지막으로 읽음"},"axioms":{"AX-V5-01":"R-042 승격 때 AX-07 추적이 안 됐다면 — \"취향\" 판정, 승격 거부.","AX-V5-02":"ADS Color 페이지가 원래 Both 였다 — 그래서 규칙 단위로 분해한 것.","AX-V5-03":"주인 없는 R-042 는 저장 자체가 안 된다. ADS Core 가 붙어야 통과.","AX-V5-04":"채점을 건너뛰고 승인하려 하면 adoptSemanticCandidate 문이 안 열린다.","AX-V5-05":"WCAG 인용이 없는 후보였다면 생성 단계에서 거부됐다.","AX-V5-06":"v2 발행은 \"토큰 31개 영향\" 계산이 먼저 있었기에 가능했다.","AX-V5-07":"배너 예외에 9/30 이 붙은 이유 — 만료 없는 예외는 만들 수 없다.","AX-V5-08":"Button (legacy) 는 12월 기한 계획이 승인되고서야 deprecated 가 됐다.","AX-V5-09":"같은 주에 났지만 — Figma 불일치는 어긋남, Jira raw 색상은 위반. 처방이 달랐다.","AX-V5-10":"8/18 동기화 기록은 통계가 이상해 보여도 수정할 수 없다.","AX-V5-11":"7/12 추출의 모델·프롬프트 해시가 남아서, 오늘 다시 돌려 비교할 수 있다.","AX-V5-12":"Jira 위반은 해소된 뒤에도 남아 8월 MTTR 4.2일 계산에 들어갔다."}}};
+
+const LAYCOLOR={org:['#5F5E5A','#F1EFE8'],sem:['#0A7A65','#DCF2EB'],doc:['#5F5E5A','#F1EFE8'],
+  norm:['#4C3FD1','#E7E4FB'],art:['#185FA5','#E6F1FB'],obs:['#A65B0B','#FAEBD8'],
+  ops:['#A82A63','#FBE4EE'],met:['#0E7490','#E0F2F7']};
+const BANDCLS={sem:'des',obs:'obsv'};
+const CARD={'1':'반드시 하나','1..n':'하나 이상','0..n':'없어도 되고 여러 개도 가능','0..1':'없거나 하나'};
+const NEWAX=new Set(['AX-V5-04','AX-V5-05','AX-V5-06','AX-V5-09','AX-V5-10','AX-V5-11']);
+const LAYY={org:74,sem:190,doc:306,norm:422,art:538,obs:654,ops:770,met:886};
+const Wd={org:190,sem:136,doc:190,norm:170,art:138,obs:118,ops:138,met:190};
+const GAPS={obs:8,sem:10,art:10,ops:10};
+const X0=64,H=48;
+const LAYMAP=Object.fromEntries(D.layers.map(l=>[l.id,l]));
+const RELMAP=Object.fromEntries(D.relations.map(r=>[r.id,r]));
+// 곡선 위 라벨 위치(t). 시뮬레이션으로 56개 하이라이트 집합 전역에서 겹침 0 을 확인한 값.
+const TREL={evaluates:.68,violates:.45,measures:.82,countsViolation:.30,readsSource:.30,
+  observationOf:.30,reconcilesObserved:.68,driftOn:.30,guides:.45,refersTo:.30,
+  plansFor:.30,predictsImpactOn:.82,exempts:.82};
+const IFACEOF={};
+D.interfaces.forEach(i=>i.implementedBy.forEach(c=>{(IFACEOF[c]=IFACEOF[c]||[]).push(i.id)}));
+
+const ACTMAP={
+ adoptSemanticCandidate:{c:['SemanticCandidate','SemanticAssertion','DesignIntent','Team','Decision','QualityAssessment'],r:['adoptedAs','belongsToIntent','decidedBy','assesses']},
+ applyScopedSemanticEdit:{c:['SemanticAssertion','ImpactAssessment','Artifact'],r:['supersedes','previews','predictsImpactOn']},
+ promoteToRule:{c:['Rule','Axiom','SemanticAssertion','Concept'],r:['justifiedBy','basedOn','governsConcept']},
+ bindEnforcement:{c:['EnforcementBinding','Rule','LintRule'],r:['bindsRule','bindsChecker']},
+ grantException:{c:['Exception','Rule','Team'],r:['exempts','grantedBy']},
+ resolveViolation:{c:['Violation','Rule','Artifact'],r:['violates','foundIn']},
+ deprecateArtifact:{c:['Artifact','MigrationPlan','Release'],r:['plansFor','packagedIn']},
+ adoptAxiom:{c:['Axiom','Decision','Team'],r:['decidedBy']},
+};
+
+const BOX={};
+D.layers.forEach(l=>{
+  const items=D.classes.filter(c=>c.layer===l.id);
+  const w=Wd[l.id],gap=GAPS[l.id]??18;
+  items.forEach((c,i)=>{BOX[c.id]={x:X0+i*(w+gap),y:LAYY[l.id],w,h:H}});
+});
+
+let sel=null,axSel=null,tourKey='semantic',tourStep=null,relSel=null,actSel=null,ifSel=null,gOpen=null,showAll=false,exMode=false;
+function clearAll(){sel=null;axSel=null;tourStep=null;relSel=null;actSel=null;ifSel=null;}
+
+function highlight(){
+  if(tourStep!==null){const s=D.tours[tourKey].steps[tourStep];
+    return{cls:new Set(s.c),rels:D.relations.filter(r=>s.r.includes(r.id))};}
+  if(actSel!==null){const m=ACTMAP[D.actions[actSel].id];
+    return{cls:new Set(m.c),rels:D.relations.filter(r=>m.r.includes(r.id))};}
+  if(relSel!==null){const r=RELMAP[relSel];return{cls:new Set([r.from,r.to]),rels:[r]};}
+  if(ifSel!==null){return{cls:new Set(D.interfaces[ifSel].implementedBy),rels:[]};}
+  if(axSel!==null){return{cls:new Set(D.axioms[axSel].constrains),rels:[]};}
+  if(sel){const rels=D.relations.filter(r=>r.from===sel||r.to===sel);
+    const cls=new Set([sel]);rels.forEach(r=>{cls.add(r.from);cls.add(r.to)});
+    return{cls,rels};}
+  return null;
+}
+
+function cubic(p,t){const m=1-t;
+  return[m*m*m*p[0]+3*m*m*t*p[2]+3*m*t*t*p[4]+t*t*t*p[6],
+         m*m*m*p[1]+3*m*m*t*p[3]+3*m*t*t*p[5]+t*t*t*p[7]];}
+const PLACED=[];
+function place(x,y,w,h){
+  const clash=cy=>PLACED.some(o=>Math.abs(o.x-x)<(o.w+w)/2+6&&Math.abs(o.y-cy)<(o.h+h)/2+4);
+  let cy=y;
+  for(let i=0;i<10&&clash(cy);i++)cy=y+(i%2?1:-1)*(24+Math.floor(i/2)*8);
+  PLACED.push({x,y:cy,w,h});return cy;}
+
+function draw(){
+  PLACED.length=0;
+  const H_=highlight();
+  let bands='',paths='',boxes='',labels='';
+  D.layers.forEach(l=>{
+    const y=LAYY[l.id];
+    bands+=`<rect class="band ${BANDCLS[l.id]||''}" x="4" y="${y-10}" width="946" height="${H+20}" rx="12"/>`
+      +`<text class="bandlab" x="14" y="${y-16}">${l.label} — ${l.role}</text>`;
+  });
+  bands+=`<line class="divide" x1="4" y1="622" x2="640" y2="622"/>`
+    +`<text class="dividelab" x="652" y="626">위가 결정한 것 · 아래가 존재하고 일어나는 것</text>`;
+  D.classes.forEach(c=>{const b=BOX[c.id];PLACED.push({x:b.x+b.w/2,y:b.y+b.h/2,w:b.w,h:b.h})});
+  if(showAll)D.relations.forEach(r=>{
+    const a=BOX[r.from],b=BOX[r.to];if(!a||!b)return;
+    if(r.from===r.to){
+      const c=BOX[r.from],top=c.y-30;
+      paths+=`<path class="arc all" d="M${c.x+c.w-16},${c.y} C${c.x+c.w+10},${top} ${c.x-10},${top} ${c.x+16},${c.y}"/>`;
+      return;
+    }
+    const ax=a.x+a.w/2,bx=b.x+b.w/2;
+    if(a.y===b.y){const y=a.y,rise=y-38;
+      paths+=`<path class="arc all" d="M${ax},${y} C${ax},${rise} ${bx},${rise} ${bx},${y}"/>`;
+    }else{const down=a.y<b.y,ay=down?a.y+a.h:a.y,by=down?b.y:b.y+b.h,my=(ay+by)/2;
+      paths+=`<path class="arc all" d="M${ax},${ay} C${ax},${my} ${bx},${my} ${bx},${by}"/>`;}
+  });
+  (H_?H_.rels:[]).forEach(r=>{
+    const a=BOX[r.from],b=BOX[r.to];if(!a||!b)return;
+    let lx,ly;
+    if(r.from===r.to){
+      const c=BOX[r.from],top=c.y-30;
+      paths+=`<path class="arc" d="M${c.x+c.w-16},${c.y} C${c.x+c.w+10},${top} ${c.x-10},${top} ${c.x+16},${c.y}"/>`;
+      lx=c.x+c.w/2;ly=top-2;
+    }else{
+      const ax=a.x+a.w/2,bx=b.x+b.w/2;let g;
+      if(a.y===b.y){const y=a.y,rise=y-38;
+        g={d:`M${ax},${y} C${ax},${rise} ${bx},${rise} ${bx},${y}`,p:[ax,y,ax,rise,bx,rise,bx,y],t:TREL[r.id]??.5};
+      }else{const down=a.y<b.y,ay=down?a.y+a.h:a.y,by=down?b.y:b.y+b.h,my=(ay+by)/2;
+        g={d:`M${ax},${ay} C${ax},${my} ${bx},${my} ${bx},${by}`,p:[ax,ay,ax,my,bx,my,bx,by],t:TREL[r.id]??.68};}
+      paths+=`<path class="arc" d="${g.d}"/>`;[lx,ly]=cubic(g.p,g.t);
+    }
+    const w=r.id.length*6.2+14,h=17;ly=place(lx,ly,w,h);
+    labels+=`<rect class="lbg" x="${lx-w/2}" y="${ly-h/2}" width="${w}" height="${h}" rx="8.5"/>`
+      +`<text class="arclab" x="${lx}" y="${ly}" text-anchor="middle" dominant-baseline="central">${r.id}</text>`;
+  });
+  D.classes.forEach(c=>{
+    const b=BOX[c.id],[fg,bg]=LAYCOLOR[c.layer];
+    const off=H_&&!H_.cls.has(c.id)?' dimmed':'';
+    const strong=H_&&H_.cls.has(c.id);
+    boxes+=`<g class="cls${off}" data-c="${c.id}">
+      <rect x="${b.x}" y="${b.y}" width="${b.w}" height="${b.h}" rx="8"
+        fill="${bg}" stroke="${fg}" stroke-width="${strong?2:0.6}"
+        ${c.abstract?'stroke-dasharray="4 3"':''}/>
+      <text class="cn" x="${b.x+b.w/2}" y="${b.y+19}" text-anchor="middle" fill="${fg}">${c.id}</text>
+      ${exMode&&D.examples.classes[c.id]
+        ?`<text class="cx" x="${b.x+b.w/2}" y="${b.y+35}" text-anchor="middle" fill="${fg}">${D.examples.classes[c.id].name}</text>`
+        :`<text class="cl" x="${b.x+b.w/2}" y="${b.y+35}" text-anchor="middle" fill="${fg}" opacity=".72">${c.ko}</text>`}</g>`;
+  });
+  document.getElementById('g').innerHTML=bands+paths+boxes+labels;
+  document.querySelectorAll('.cls').forEach(g=>g.onclick=()=>{
+    const c=g.dataset.c;const was=sel;clearAll();sel=was===c?null:c;renderAll();});
+}
+
+function tourUI(){
+  document.getElementById('tsel').innerHTML=Object.entries(D.tours).map(([k,t])=>
+    `<button data-k="${k}" aria-pressed="${tourKey===k}">${t.label}</button>`).join('');
+  const steps=D.tours[tourKey].steps;
+  document.getElementById('steps').innerHTML=
+    steps.map((s,i)=>`<button data-t="${i}" aria-pressed="${tourStep===i}">${i+1}. ${s.t}</button>`).join('')
+    +(tourStep!==null?`<button class="off" id="touroff">해제</button>`:'');
+  const n=document.getElementById('narr');
+  if(tourStep!==null){n.hidden=false;
+    n.innerHTML=`<b>${D.tours[tourKey].label} · ${tourStep+1} / ${steps.length}</b>${steps[tourStep].n}`
+      +(exMode?`<span class="ex"><b>ADS 예시</b>${D.examples.tours[tourKey][tourStep]}</span>`:'');
+  }else n.hidden=true;
+  document.querySelectorAll('#tsel button').forEach(b=>b.onclick=()=>{
+    tourKey=b.dataset.k;tourStep=null;clearOthers();renderAll();});
+  document.querySelectorAll('#steps button[data-t]').forEach(b=>b.onclick=()=>{
+    const i=+b.dataset.t;const was=tourStep;clearAll();tourStep=was===i?null:i;renderAll();});
+  const off=document.getElementById('touroff');
+  if(off)off.onclick=()=>{clearAll();renderAll();};
+}
+function clearOthers(){sel=null;axSel=null;relSel=null;actSel=null;ifSel=null;}
+
+function detail(){
+  const el=document.getElementById('det');
+  if(tourStep!==null){
+    const s=D.tours[tourKey].steps[tourStep];
+    el.innerHTML=`<div><p class="dk">이 걸음의 클래스</p>
+      <p class="dd">${s.c.map(c=>`<span class="p">${c}</span>`).join('')}</p></div>
+      <div><p class="dk">이 걸음의 관계</p>
+      ${s.r.map(id=>{const r=RELMAP[id];
+        return `<div class="rline"><span class="rt">${r.id}</span><span class="rr">${r.forward}</span>
+        <span class="rm">${r.from} → ${r.to} · ${CARD[r.cardinality]}</span></div>`}).join('')}</div>`;
+    return;
+  }
+  if(!sel){el.innerHTML=`<div><p class="dk">시작하기</p>
+    <p class="empty">투어를 밟거나, 박스·관계·인터페이스·공리 무엇이든 눌러봐. 전부 같은 맵이 반응해.</p></div>
+    <div><p class="dk">여덟 층이 하는 일</p><p class="dd">${D.layers.map(l=>`<b>${l.label}</b>은 ${l.role}`).join('. ')}.</p></div>`;return}
+  const c=D.classes.find(x=>x.id===sel);
+  const out=D.relations.filter(r=>r.from===sel),inn=D.relations.filter(r=>r.to===sel&&r.from!==sel);
+  const ax=D.axioms.filter(a=>a.constrains.includes(sel));
+  const ifs=IFACEOF[sel]||[];
+  const line=(t,rel,card,read)=>`<div class="rline"><span class="rt">${t}</span><span class="rr">${read}</span>
+    <span class="rm">${rel} · ${CARD[card]}</span></div>`;
+  el.innerHTML=`<div>
+    <p class="dk">${LAYMAP[c.layer].label} 층${c.abstract?' · 직접 만들 수 없는 상위 클래스':''}</p>
+    <p class="dt">${c.id}</p><p class="dl">${c.ko}</p>
+    <p class="dd">${c.definition}</p>
+    <p class="dk">가지는 값</p><div>${c.properties.map(p=>`<span class="p">${p}</span>`).join('')}</div>
+    ${ifs.length?`<p class="dk" style="margin-top:12px">구현하는 계약</p><div>${ifs.map(i=>`<span class="ifc">${i}</span>`).join('')}</div>`:''}
+    ${exMode&&D.examples.classes[sel]?`<div class="exblock"><span class="k">실제라면 — 이 서사에서</span><span class="n">${D.examples.classes[sel].name}</span><p class="b">${D.examples.classes[sel].d}</p></div>`:''}
+  </div><div>
+    <p class="dk">${c.id} 이(가) 가리키는 것 · ${out.length} <span style="color:var(--ink-3);letter-spacing:0;text-transform:none">— 이 Class 가 정의역(domain)인 Relation</span></p>
+    ${out.map(r=>line(r.to,r.id,r.cardinality,r.forward)).join('')||'<p class="empty">없음</p>'}
+    <p class="dk" style="margin-top:14px">${c.id} 을(를) 가리키는 것 · ${inn.length} <span style="color:var(--ink-3);letter-spacing:0;text-transform:none">— 이 Class 가 치역(range)인 Relation</span></p>
+    ${inn.map(r=>line(r.from,r.id,r.cardinality,r.backward)).join('')||'<p class="empty">없음</p>'}
+    <p class="dk" style="margin-top:14px">여기에 걸리는 공리 · ${ax.length}</p>
+    ${ax.map(a=>`<div class="rline"><span class="rt">${a.id}</span><span class="rr">${a.statement}</span></div>`).join('')||'<p class="empty">없음</p>'}
+  </div>`;
+}
+
+function ifaces(){
+  document.getElementById('ifaces').innerHTML=D.interfaces.map((f,i)=>`
+    <div class="iface" data-i="${i}" aria-pressed="${ifSel===i}">
+      <div class="ifh"><span class="ifn">${f.id}</span><span class="ifk">${f.ko}</span></div>
+      <p class="ifr">${f.reads}</p>
+      <p class="ifg">주는 값: ${f.gives.map(g=>`<span>${g}</span>`).join('')} · 구현 ${f.implementedBy.length}개</p>
+      ${exMode?`<span class="exline"><b>ADS 예시</b>${D.examples.interfaces[f.id]}</span>`:''}
+    </div>`).join('');
+  document.querySelectorAll('.iface').forEach(el=>el.onclick=()=>{
+    const i=+el.dataset.i;const was=ifSel;clearAll();ifSel=was===i?null:i;renderAll();
+    if(ifSel!==null)if(matchMedia('(max-width:1020px)').matches)document.getElementById('map').scrollIntoView({behavior:'smooth',block:'nearest'});});
+}
+
+function ridx(){
+  document.getElementById('ridx').innerHTML=D.relations.map(r=>`
+    <div class="ri" data-r="${r.id}" aria-pressed="${relSel===r.id}">
+      <span class="n">${r.id}</span>
+      <span class="ft"><i>${r.from}</i> → <i>${r.to}</i>${exMode?`<span class="exr2">${D.examples.relations[r.id]}</span>`:''}</span>
+    </div>`).join('');
+  document.querySelectorAll('.ri').forEach(el=>el.onclick=()=>{
+    const id=el.dataset.r;const was=relSel;clearAll();relSel=was===id?null:id;renderAll();
+    if(relSel)if(matchMedia('(max-width:1020px)').matches)document.getElementById('map').scrollIntoView({behavior:'smooth',block:'nearest'});});
+}
+
+function acts(){
+  document.getElementById('acts').innerHTML=D.actions.map((a,i)=>`
+    <div class="act">
+      <div class="acth"><span class="acti">${a.id}</span><span class="actk">${a.ko}</span>
+        <button class="seemap" data-a="${i}" aria-pressed="${actSel===i}">맵에서 보기</button></div>
+      <p class="actn">${a.note}</p>
+      <div class="actrow">
+        <div class="actcol"><span class="ak">받는 값</span><span class="av">${a.inputs.join('<br>')}</span></div>
+        <div class="actcol"><span class="ak">실행 조건이 되는 공리</span>
+          ${a.guards.length?a.guards.map(g=>`<span class="gd" data-g="${g}" data-ga="${i}">${g}</span>`).join('')
+            :'<span class="gnone">없음 — 언제나 실행 가능</span>'}</div>
+        <div class="actcol"><span class="ak">실행 결과</span><span class="av">${a.effects.join('<br>')}</span></div>
+      </div>
+      ${exMode?`<span class="exline"><b>ADS 예시</b>${D.examples.actions[a.id]}</span>`:''}
+      ${gOpen&&gOpen.a===i?`<div class="gdet"><b>${gOpen.g}</b> ${D.axioms.find(x=>x.id===gOpen.g).statement} — ${D.axioms.find(x=>x.id===gOpen.g).why}</div>`:''}
+    </div>`).join('');
+  document.querySelectorAll('.gd').forEach(b=>b.onclick=()=>{
+    const g=b.dataset.g,a=+b.dataset.ga;
+    gOpen=(gOpen&&gOpen.g===g&&gOpen.a===a)?null:{g,a};acts();});
+  document.querySelectorAll('.seemap').forEach(b=>b.onclick=()=>{
+    const i=+b.dataset.a;const was=actSel;clearAll();actSel=was===i?null:i;renderAll();
+    if(actSel!==null)if(matchMedia('(max-width:1020px)').matches)document.getElementById('map').scrollIntoView({behavior:'smooth',block:'nearest'});});
+}
+
+function fns(){
+  document.getElementById('fns').innerHTML=D.metrics.map(f=>`
+    <div class="fc"><p class="fn">${f.ko}</p><p class="fr2">${f.reads}</p>
+    <p class="fe">${f.formula}</p>
+    ${exMode?`<span class="exline"><b>ADS 예시</b>${D.examples.metrics[f.id]}</span>`:''}</div>`).join('');
+}
+
+function axList(){
+  document.getElementById('axl').innerHTML=D.axioms.map((a,i)=>`
+    <div class="ax${NEWAX.has(a.id)?' new':''}" data-ax="${i}" aria-pressed="${axSel===i}">
+      <div class="axh"><span class="axi">${a.id}</span><span class="axs">${a.statement}</span></div>
+      <p class="axw">${a.why}</p>
+      ${exMode?`<span class="exline"><b>ADS 예시</b>${D.examples.axioms[a.id]}</span>`:''}
+      <p class="axck">이 공리가 걸리는 클래스</p>
+      <div class="axc">${a.constrains.map(c=>`<span>${c}</span>`).join('')}</div>
+    </div>`).join('');
+  document.querySelectorAll('.ax').forEach(b=>b.onclick=()=>{
+    const i=+b.dataset.ax;const was=axSel;clearAll();axSel=was===i?null:i;renderAll();
+    if(axSel!==null)if(matchMedia('(max-width:1020px)').matches)document.getElementById('map').scrollIntoView({behavior:'smooth',block:'nearest'});});
+}
+
+document.getElementById('props').innerHTML=D.proposals.map(p=>`
+  <div class="prop"><div class="prh"><span class="pri">${p.id}</span><span class="prt">${p.title}</span></div>
+  <p class="prb">${p.body}</p></div>`).join('');
+
+function bindAll(){
+  const b=document.getElementById('allbtn');
+  if(b){b.setAttribute('aria-pressed',String(showAll));
+    b.onclick=()=>{showAll=!showAll;renderAll();};}
+  const off=document.getElementById('exoff'),on=document.getElementById('exon');
+  if(off&&on){
+    off.setAttribute('aria-pressed',String(!exMode));
+    on.setAttribute('aria-pressed',String(exMode));
+    off.onclick=()=>{exMode=false;renderAll();};
+    on.onclick=()=>{exMode=true;renderAll();};
+  }
+  document.getElementById('exnote').hidden=!exMode;
+}
+function renderAll(){draw();tourUI();detail();ifaces();ridx();acts();fns();axList();bindAll();}
+renderAll();
+</script>
