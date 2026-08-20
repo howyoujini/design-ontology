@@ -366,7 +366,7 @@ function highlight(){
   if(ifSel!==null){return{cls:new Set(D.interfaces[ifSel].implementedBy),rels:[]};}
   if(axSel!==null){return{cls:new Set(D.axioms[axSel].constrains),rels:[]};}
   if(sel){const rels=D.relations.filter(r=>r.from===sel||r.to===sel);
-    const cls=new Set([sel]);rels.forEach(r=>{cls.add(r.from);cls.add(r.to)});
+    const cls=new Set([sel]);rels.forEach(r=>{cls.add(r.from);relTargets(r).forEach(t=>cls.add(t))});
     return{cls,rels};}
   return null;
 }
